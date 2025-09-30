@@ -3,7 +3,7 @@ use chrono::{Datelike, Local, NaiveDate, Weekday};
 use eyre::{WrapErr, Result};
 
 #[derive(Parser)]
-#[clap(author, version, about, long_about = None)]
+#[clap(author, version = env!("GIT_DESCRIBE"), about, long_about = None)]
 struct Cli {
     /// The date for which to calculate the work week, in YYYY-MM-DD format.
     #[clap(value_parser, default_value_t = default_date(), value_hint = ValueHint::Other, help = "The date for which to calculate the work week, in YYYY-MM-DD format.")]
