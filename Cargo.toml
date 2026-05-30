@@ -1,6 +1,7 @@
 [package]
 name = "workweek"
 version = "0.1.1"
+description = "Calculate the work week containing a given date"
 edition = "2021"
 build = "build.rs"
 
