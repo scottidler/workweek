@@ -1,6 +1,6 @@
-use clap::{Parser, ValueHint};
 use chrono::{Datelike, Local, NaiveDate, Weekday};
-use eyre::{WrapErr, Result};
+use clap::{Parser, ValueHint};
+use eyre::{Result, WrapErr};
 
 #[derive(Parser)]
 #[clap(author, version = env!("GIT_DESCRIBE"), about, long_about = None)]
@@ -22,8 +22,7 @@ fn main() -> Result<()> {
     let date = NaiveDate::parse_from_str(&args.date, "%Y-%m-%d")
         .wrap_err_with(|| format!("Could not parse the date: {}", args.date))?;
 
-    let work_week = calculate_work_week(date)
-        .wrap_err("Failed to calculate the work week")?;
+    let work_week = calculate_work_week(date).wrap_err("Failed to calculate the work week")?;
 
     println!("WW{}", work_week);
 
@@ -32,13 +31,11 @@ fn main() -> Result<()> {
 
 fn calculate_work_week(date: NaiveDate) -> Result<u32> {
     let year = date.year();
-    let first_jan = NaiveDate::from_ymd_opt(year, 1, 1)
-        .ok_or_else(|| eyre::eyre!("Invalid start date"))?;
+    let first_jan = NaiveDate::from_ymd_opt(year, 1, 1).ok_or_else(|| eyre::eyre!("Invalid start date"))?;
     let first_sunday = if first_jan.weekday() == Weekday::Sun {
         first_jan
     } else {
-        first_jan
-            + chrono::Duration::days(7 - first_jan.weekday().num_days_from_sunday() as i64)
+        first_jan + chrono::Duration::days(7 - first_jan.weekday().num_days_from_sunday() as i64)
     };
     let work_week = ((date.ordinal() - first_sunday.ordinal()) / 7) + 1;
     Ok(work_week)
